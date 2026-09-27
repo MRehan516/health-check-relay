@@ -342,7 +342,7 @@ function PatientPanel({
                   <span className="text-sm">{t.description}</span>
                 </div>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
-                  {TASK_TYPE_LABEL[t.type] ?? t.type} · {t.status === "done" ? "Done" : "Pending"}
+                  {TASK_TYPE_LABEL[t.type] ?? t.type}, {t.status === "done" ? "Done" : "Pending"}
                 </span>
               </li>
             ))}
