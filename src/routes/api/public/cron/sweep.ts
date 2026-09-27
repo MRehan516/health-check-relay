@@ -21,7 +21,7 @@ export const Route = createFileRoute("/api/public/cron/sweep")({
           .from("patients")
           .select("id, name, phone, discharge_date");
         for (const p of patients ?? []) {
-          const day = Math.round(
+          const day = Math.floor(
             (Date.now() - new Date(`${p.discharge_date}T00:00:00`).getTime()) / 86_400_000,
           );
           const { data: task } = await db

@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 const NAV = [
@@ -10,10 +12,22 @@ const NAV = [
 
 export function AppShell({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
   const navigate = useNavigate();
+  const qc = useQueryClient();
+  const [resetting, setResetting] = useState(false);
 
   const signOut = async () => {
     await supabase.auth.signOut();
     navigate({ to: "/auth" });
+  };
+
+  // Re-seeds the five synthetic patients relative to today so states never drift.
+  const resetDemo = async () => {
+    setResetting(true);
+    const { error } = await supabase.rpc("reset_demo_data");
+    setResetting(false);
+    if (error) return void toast.error(error.message);
+    await qc.invalidateQueries();
+    toast.success("Demo patients refreshed for today");
   };
 
   return (
@@ -39,7 +53,14 @@ export function AppShell({ children, aside }: { children: ReactNode; aside?: Rea
             ))}
           </nav>
           {aside}
-          <div className="mt-auto border-t border-hairline px-5 py-3">
+          <div className="mt-auto flex flex-col items-start gap-2 border-t border-hairline px-5 py-3">
+            <button
+              onClick={resetDemo}
+              disabled={resetting}
+              className="text-sm text-primary hover:underline disabled:opacity-60"
+            >
+              {resetting ? "Resetting demo" : "Reset demo patients"}
+            </button>
             <button onClick={signOut} className="text-sm text-primary hover:underline">
               Sign out
             </button>

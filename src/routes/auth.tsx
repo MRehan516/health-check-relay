@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Backdrop } from "@/components/backdrop";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -53,15 +54,16 @@ function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <header className="border-b border-hairline bg-surface">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+      <Backdrop intensity="soft" />
+      <header className="relative border-b border-hairline bg-surface/85 backdrop-blur">
         <div className="mx-auto max-w-5xl px-5 py-4">
           <Link to="/" className="font-display text-xl">
             RecoverLine
           </Link>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-sm px-5 py-16">
+      <main className="fade-up relative mx-auto my-16 w-full max-w-sm border border-hairline bg-surface px-6 py-8">
         <h1 className="text-2xl">{mode === "in" ? "Sign in" : "Create an account"}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Care coordinator access to the check-in dashboard.
@@ -74,6 +76,7 @@ function AuthPage() {
             <input
               id="email"
               type="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -87,6 +90,7 @@ function AuthPage() {
             <input
               id="password"
               type="password"
+              autoComplete={mode === "in" ? "current-password" : "new-password"}
               required
               minLength={6}
               value={password}
