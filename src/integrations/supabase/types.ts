@@ -14,7 +14,238 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_log: {
+        Row: {
+          action: string
+          actor: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      caregivers: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          phone: string
+          relation: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          phone: string
+          relation?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string
+          relation?: string | null
+        }
+        Relationships: []
+      }
+      checkins: {
+        Row: {
+          channel: Database["public"]["Enums"]["checkin_channel"]
+          id: string
+          message_body: string | null
+          missed_count: number
+          parsed_status: Database["public"]["Enums"]["parsed_status"]
+          patient_id: string
+          raw_response: string | null
+          response_deadline: string
+          sent_at: string
+          task_id: string | null
+        }
+        Insert: {
+          channel?: Database["public"]["Enums"]["checkin_channel"]
+          id?: string
+          message_body?: string | null
+          missed_count?: number
+          parsed_status?: Database["public"]["Enums"]["parsed_status"]
+          patient_id: string
+          raw_response?: string | null
+          response_deadline?: string
+          sent_at?: string
+          task_id?: string | null
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["checkin_channel"]
+          id?: string
+          message_body?: string | null
+          missed_count?: number
+          parsed_status?: Database["public"]["Enums"]["parsed_status"]
+          patient_id?: string
+          raw_response?: string | null
+          response_deadline?: string
+          sent_at?: string
+          task_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkins_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checkins_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "discharge_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discharge_tasks: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          patient_id: string
+          recovery_day: number
+          status: Database["public"]["Enums"]["task_status"]
+          type: Database["public"]["Enums"]["task_type"]
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          patient_id: string
+          recovery_day?: number
+          status?: Database["public"]["Enums"]["task_status"]
+          type?: Database["public"]["Enums"]["task_type"]
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          patient_id?: string
+          recovery_day?: number
+          status?: Database["public"]["Enums"]["task_status"]
+          type?: Database["public"]["Enums"]["task_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discharge_tasks_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escalations: {
+        Row: {
+          checkin_id: string | null
+          created_at: string
+          id: string
+          patient_id: string | null
+          reason: string
+          resolution_note: string | null
+          resolved_by: string | null
+          severity: Database["public"]["Enums"]["escalation_severity"]
+          status: Database["public"]["Enums"]["escalation_status"]
+        }
+        Insert: {
+          checkin_id?: string | null
+          created_at?: string
+          id?: string
+          patient_id?: string | null
+          reason: string
+          resolution_note?: string | null
+          resolved_by?: string | null
+          severity: Database["public"]["Enums"]["escalation_severity"]
+          status?: Database["public"]["Enums"]["escalation_status"]
+        }
+        Update: {
+          checkin_id?: string | null
+          created_at?: string
+          id?: string
+          patient_id?: string | null
+          reason?: string
+          resolution_note?: string | null
+          resolved_by?: string | null
+          severity?: Database["public"]["Enums"]["escalation_severity"]
+          status?: Database["public"]["Enums"]["escalation_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escalations_checkin_id_fkey"
+            columns: ["checkin_id"]
+            isOneToOne: false
+            referencedRelation: "checkins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "escalations_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          caregiver_id: string | null
+          created_at: string
+          discharge_date: string
+          document_path: string | null
+          id: string
+          name: string
+          phone: string
+        }
+        Insert: {
+          caregiver_id?: string | null
+          created_at?: string
+          discharge_date: string
+          document_path?: string | null
+          id?: string
+          name: string
+          phone: string
+        }
+        Update: {
+          caregiver_id?: string | null
+          created_at?: string
+          discharge_date?: string
+          document_path?: string | null
+          id?: string
+          name?: string
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patients_caregiver_id_fkey"
+            columns: ["caregiver_id"]
+            isOneToOne: false
+            referencedRelation: "caregivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +254,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      checkin_channel: "sms" | "simulated"
+      escalation_severity: "URGENT" | "WATCH" | "CONTACT_FAILURE" | "UNCLEAR"
+      escalation_status: "open" | "resolved"
+      parsed_status: "pending" | "routine" | "concerning" | "unclear"
+      task_status: "pending" | "done"
+      task_type: "medication" | "wound_care" | "follow_up" | "warning_sign"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +386,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      checkin_channel: ["sms", "simulated"],
+      escalation_severity: ["URGENT", "WATCH", "CONTACT_FAILURE", "UNCLEAR"],
+      escalation_status: ["open", "resolved"],
+      parsed_status: ["pending", "routine", "concerning", "unclear"],
+      task_status: ["pending", "done"],
+      task_type: ["medication", "wound_care", "follow_up", "warning_sign"],
+    },
   },
 } as const
