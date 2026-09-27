@@ -295,7 +295,7 @@ function PatientPanel({
           <div>
             <h1 className="text-2xl">{patient.name}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Discharged <span className="num">{patient.discharge_date}</span> · day{" "}
+              Discharged <span className="num">{patient.discharge_date}</span>, day{" "}
               <span className="num">{day}</span> of recovery
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -342,7 +342,7 @@ function PatientPanel({
                   <span className="text-sm">{t.description}</span>
                 </div>
                 <span className="mt-0.5 block text-xs text-muted-foreground">
-                  {TASK_TYPE_LABEL[t.type] ?? t.type} · {t.status === "done" ? "Done" : "Pending"}
+                  {TASK_TYPE_LABEL[t.type] ?? t.type}, {t.status === "done" ? "Done" : "Pending"}
                 </span>
               </li>
             ))}
@@ -365,15 +365,15 @@ function PatientPanel({
                   <span className="num text-muted-foreground">{formatTimestamp(c.sent_at)}</span>
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {c.raw_response ? `Reply: "${c.raw_response}"` : "No reply received"} · parsed as{" "}
+                  {c.raw_response ? `Reply: "${c.raw_response}"` : "No reply received"}. Parsed as{" "}
                   {c.parsed_status}
                   {c.missed_count > 0 ? (
                     <>
                       {" "}
-                      · missed attempts <span className="num">{c.missed_count}</span>
+                      Missed attempts <span className="num">{c.missed_count}</span>
                     </>
                   ) : null}{" "}
-                  · {c.channel === "sms" ? "SMS" : "Simulated"}
+                  Channel: {c.channel === "sms" ? "SMS" : "Simulated"}
                 </p>
               </li>
             ))}
