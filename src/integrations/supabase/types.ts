@@ -251,7 +251,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reset_demo_data: { Args: never; Returns: undefined }
     }
     Enums: {
       checkin_channel: "sms" | "simulated"

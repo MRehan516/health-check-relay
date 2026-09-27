@@ -124,3 +124,35 @@
 @utility status-sweep {
   animation: status-sweep 1100ms cubic-bezier(0.2, 0.7, 0.3, 1) 1;
 }
+
+/* Ambient background motion (marketing and sign-in pages only). */
+@keyframes bd-drift {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(-3%, 2%, 0) rotate(4deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+@keyframes bd-pulse {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  10% { opacity: 1; }
+  70% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes bd-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.bd-drift { animation: bd-drift 40s ease-in-out infinite; transform-origin: 60% 40%; }
+.bd-pulse { stroke-dasharray: 1; stroke-dashoffset: 1; animation: bd-pulse 6s ease-in-out infinite; }
+.bd-rise { bottom: -60px; opacity: 0; animation: bd-rise 24s linear infinite; }
+.fade-up { animation: fade-up 700ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-drift, .bd-pulse, .bd-rise, .fade-up { animation: none; }
+  .bd-pulse { stroke-dashoffset: 0; }
+}
