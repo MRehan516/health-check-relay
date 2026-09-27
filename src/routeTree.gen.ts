@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicCronSweepRouteImport } from './routes/api/public/cron/sweep'
+import { Route as ApiPublicTwilioReplyRouteImport } from './routes/api/public/twilio/reply'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCronSweepRoute = ApiPublicCronSweepRouteImport.update({
+  id: '/api/public/cron/sweep',
+  path: '/api/public/cron/sweep',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTwilioReplyRoute = ApiPublicTwilioReplyRouteImport.update({
+  id: '/api/public/twilio/reply',
+  path: '/api/public/twilio/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/cron/sweep': typeof ApiPublicCronSweepRoute
+  '/api/public/twilio/reply': typeof ApiPublicTwilioReplyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/cron/sweep': typeof ApiPublicCronSweepRoute
+  '/api/public/twilio/reply': typeof ApiPublicTwilioReplyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/cron/sweep': typeof ApiPublicCronSweepRoute
+  '/api/public/twilio/reply': typeof ApiPublicTwilioReplyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/public/cron/sweep' | '/api/public/twilio/reply'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/cron/sweep' | '/api/public/twilio/reply'
+  id: '__root__' | '/' | '/api/public/cron/sweep' | '/api/public/twilio/reply'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicCronSweepRoute: typeof ApiPublicCronSweepRoute
+  ApiPublicTwilioReplyRoute: typeof ApiPublicTwilioReplyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cron/sweep': {
+      id: '/api/public/cron/sweep'
+      path: '/api/public/cron/sweep'
+      fullPath: '/api/public/cron/sweep'
+      preLoaderRoute: typeof ApiPublicCronSweepRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/twilio/reply': {
+      id: '/api/public/twilio/reply'
+      path: '/api/public/twilio/reply'
+      fullPath: '/api/public/twilio/reply'
+      preLoaderRoute: typeof ApiPublicTwilioReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicCronSweepRoute: ApiPublicCronSweepRoute,
+  ApiPublicTwilioReplyRoute: ApiPublicTwilioReplyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
