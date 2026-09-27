@@ -19,8 +19,13 @@ export const Route = createFileRoute("/api/public/twilio/reply")({
           return new Response("Twilio auth token not configured", { status: 503 });
         }
 
-        // Twilio signature: HMAC-SHA1 of the full URL plus sorted POST params.
-        const url = request.url;
+        // Twilio signature: HMAC-SHA1 of the full public URL plus sorted POST params.
+        // Behind the hosting proxy request.url may be internal, so rebuild it
+        // from forwarded headers to match the URL Twilio actually called.
+        const u = new URL(request.url);
+        const host = request.headers.get("x-forwarded-host") ?? u.host;
+        const proto = request.headers.get("x-forwarded-proto") ?? u.protocol.replace(":", "");
+        const url = `${proto}://${host}${u.pathname}${u.search}`;
         const sorted = [...params.entries()].sort(([a], [b]) => (a < b ? -1 : 1));
         const payload = url + sorted.map(([k, v]) => k + v).join("");
         const expected = createHmac("sha1", authToken).update(payload).digest("base64");

@@ -127,7 +127,11 @@ export async function sendSms(to: string, body: string): Promise<{ sent: boolean
       },
       body: new URLSearchParams({ To: to, From: from, Body: body }),
     });
-    if (!res.ok) return { sent: false, note: `Twilio error ${res.status}` };
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.error(`Twilio send failed [${res.status}]: ${errBody}`);
+      return { sent: false, note: `Twilio error ${res.status}: ${errBody.slice(0, 200)}` };
+    }
     return { sent: true };
   } catch (e) {
     return { sent: false, note: (e as Error).message };
