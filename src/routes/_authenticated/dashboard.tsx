@@ -276,7 +276,8 @@ function PatientPanel({
   const markResolved = async (id: string) => {
     setBusy(true);
     try {
-      await resolve({ data: { escalation_id: id, note: notes[id] || undefined } });
+      const note = notes[id]?.trim();
+      await resolve({ data: note ? { escalation_id: id, note } : { escalation_id: id } });
       toast.success("Escalation resolved");
       onChanged();
     } catch (e) {
