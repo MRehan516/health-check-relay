@@ -246,14 +246,40 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       reset_demo_data: { Args: never; Returns: undefined }
     }
     Enums: {
+      app_role: "coordinator"
       checkin_channel: "sms" | "simulated"
       escalation_severity: "URGENT" | "WATCH" | "CONTACT_FAILURE" | "UNCLEAR"
       escalation_status: "open" | "resolved"
@@ -387,6 +413,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["coordinator"],
       checkin_channel: ["sms", "simulated"],
       escalation_severity: ["URGENT", "WATCH", "CONTACT_FAILURE", "UNCLEAR"],
       escalation_status: ["open", "resolved"],
